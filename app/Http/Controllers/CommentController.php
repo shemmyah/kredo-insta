@@ -33,4 +33,28 @@ class CommentController extends Controller
 
         return redirect()->route('post.show', $post_id);
     }
+
+    // Aimi rewrote
+    public function update(Request $request, $id)
+{
+    $request->validate([
+        'comment_body' => 'required|max:150', 
+    ]);
+
+    $comment = Comment::findOrFail($id);
+
+    if ($comment->user_id !== auth()->id()) {
+        return redirect()->back(); // 本人じゃなければ戻す
+    }
+
+    $comment->body = $request->comment_body;
+    $comment->save();
+
+    return redirect()->back(); 
+}
+
+    public function destroy($id) {
+       $this->comment->destroy($id);
+        return redirect()->route('index');
+    }
 }
