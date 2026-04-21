@@ -1,3 +1,4 @@
+{{-- 複数postの画面 --}}
 @extends('layouts.app')
 
 @section('title', 'Show Post')
@@ -59,7 +60,8 @@
                                     <form action="{{ route('follow.destroy', $post->user->id) }}" method="post">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="border-0 bg-transparent p-0 text-secondary">Following</button>
+                                        <button type="submit"
+                                            class="border-0 bg-transparent p-0 text-secondary">Following</button>
                                     </form>
                                 @else
                                     <form action="{{ route('follow.store', $post->user->id) }}" method="post">
@@ -140,21 +142,62 @@
                                             class="text-decoration-none text-dark fw-bold">{{ $comment->user->name }}</a>
                                         &nbsp;
                                         <p class="d-inline fw-light">{{ $comment->body }}</p>
+                                        <span
+                                            class="text-uppercase text-muted xsmall">{{ date('M d, Y', strtotime($comment->created_at)) }}</span>
 
-                                        <form action="#" method="post">
-                                            @csrf
-                                            @method('DELETE')
 
-                                            <span
-                                                class="text-uppercase text-muted xsmall">{{ date('M d, Y', strtotime($comment->created_at)) }}</span>
 
-                                            {{-- if the AUTH user is the OWNER, show delete btn --}}
-                                            @if (Auth::user()->id === $comment->user->id)
+                                        {{-- if the AUTH user is the OWNER, show delete btn --}}
+                                        @if (Auth::user()->id === $comment->user->id)
+                                            {{-- Aimi rewrote --}}
+                                            {{-- 1, Edit button (call the modal) --}}
+                                            &middot;
+                                            <button type="button" class="border-0 bg-transparent text-primary p-0 xsmall"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#edit-comment-show-{{ $comment->id }}">Edit</button>
+
+                                            {{-- 2. Delete button --}}
+                                            <form action="{{ route('comment.destroy', $comment->id) }}" method="post">
+                                                @csrf
+                                                @method('DELETE')
                                                 &middot;
                                                 <button type="submit"
                                                     class="border-0 bg-transparent text-danger p-0 xsmall">Delete</button>
-                                            @endif
-                                        </form>
+
+                                            </form>
+                                            
+                                            <div class="modal fade" id="edit-comment-show-{{ $comment->id }}"
+                                                tabindex="-1" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <form action="{{ route('comment.update', $comment->id) }}"
+                                                            method="post">
+                                                            @csrf
+                                                            @method('PATCH')
+
+                                                            <div class="modal-header border-0">
+                                                                <h5 class="modal-title h6 fw-bold">Edit Comment</h5>
+                                                                <button type="button" class="btn-close shadow-none"
+                                                                    data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+
+                                                            <div class="modal-body">
+                                                                {{-- 編集用の入力エリア --}}
+                                                                <textarea name="comment_body" class="form-control" rows="3" required>{{ $comment->body }}</textarea>
+                                                            </div>
+
+                                                            <div class="modal-footer border-0">
+                                                                <button type="button"
+                                                                    class="btn btn-outline-secondary btn-sm"
+                                                                    data-bs-dismiss="modal">Cancel</button>
+                                                                <button type="submit"
+                                                                    class="btn btn-primary btn-sm">Update</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </li>
                                 @endforeach
                             </ul>

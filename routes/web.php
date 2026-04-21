@@ -41,6 +41,8 @@ Route::group(['middleware' => 'auth'], function(){
 
     #COMMENT
     Route::post('/comment/{post_id}/store', [CommentController::class, 'store'])->name('comment.store');
+    Route::patch('/comment/{post_id}/update', [CommentController::class, 'update'])->name('comment.update');
+    Route::delete('/comment/{post_id}/destroy', [CommentController::class, 'destroy'])->name('comment.destroy');
 
     #PROFILE
     Route::get('/profile/{id}/show', [ProfileController::class, 'show'])->name('profile.show');
