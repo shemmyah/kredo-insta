@@ -15,6 +15,7 @@ Auth::routes();
 
 //AYUMU
 // Aimi comment
+// Hinako comment
 
 Route::group(['middleware' => 'auth'], function(){
     Route::get('/', [HomeController::class, 'index'])->name('index');
