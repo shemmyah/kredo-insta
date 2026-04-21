@@ -25,7 +25,7 @@
                             Edit
                         </button>
 
-                        <form action="{{ route('comment.destroy', $comment->id) }}" method="post">
+                        <form action="{{ route('comment.destroy', $comment->id) }}" method="post" class="d-inline">
                             @csrf
                             @method('DELETE')
                             &middot;

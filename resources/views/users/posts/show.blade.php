@@ -116,8 +116,6 @@
 
                     {{-- include comments here --}}
                     <div class="mt-4">
-
-
                         <form action="{{ route('comment.store', $post->id) }}" method="post">
                             @csrf
 
@@ -133,6 +131,7 @@
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </form>
+
                         {{-- Show all comments here --}}
                         @if ($post->comments->isNotEmpty())
                             <ul class="list-group mt-2">
@@ -145,8 +144,6 @@
                                         <span
                                             class="text-uppercase text-muted xsmall">{{ date('M d, Y', strtotime($comment->created_at)) }}</span>
 
-
-
                                         {{-- if the AUTH user is the OWNER, show delete btn --}}
                                         @if (Auth::user()->id === $comment->user->id)
                                             {{-- Aimi rewrote --}}
@@ -157,15 +154,15 @@
                                                 data-bs-target="#edit-comment-show-{{ $comment->id }}">Edit</button>
 
                                             {{-- 2. Delete button --}}
-                                            <form action="{{ route('comment.destroy', $comment->id) }}" method="post">
+                                            <form action="{{ route('comment.destroy', $comment->id) }}" method="post" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
+
                                                 &middot;
                                                 <button type="submit"
                                                     class="border-0 bg-transparent text-danger p-0 xsmall">Delete</button>
-
                                             </form>
-                                            
+
                                             <div class="modal fade" id="edit-comment-show-{{ $comment->id }}"
                                                 tabindex="-1" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
@@ -176,6 +173,7 @@
                                                             @method('PATCH')
 
                                                             <div class="modal-header border-0">
+
                                                                 <h5 class="modal-title h6 fw-bold">Edit Comment</h5>
                                                                 <button type="button" class="btn-close shadow-none"
                                                                     data-bs-dismiss="modal" aria-label="Close"></button>
