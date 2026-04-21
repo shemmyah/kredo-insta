@@ -18,6 +18,7 @@ Auth::routes();
 // Aimi comment
 // Hinako comment
 // tatsuya comment
+//
 
 Route::group(['middleware' => 'auth'], function(){
     Route::get('/', [HomeController::class, 'index'])->name('index');
