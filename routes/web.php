@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\UsersController;
 Auth::routes();
 
 //AYUMU
+// Aimi comment
 
 Route::group(['middleware' => 'auth'], function(){
     Route::get('/', [HomeController::class, 'index'])->name('index');
