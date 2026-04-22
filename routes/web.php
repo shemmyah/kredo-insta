@@ -10,6 +10,8 @@ use App\Http\Controllers\LikeController;
 use App\Http\Controllers\FollowController;
 #Admin Controller
 use App\Http\Controllers\Admin\UsersController;
+#DM
+use App\Http\Controllers\MessageController;
 use App\Http\Controllers\Admin\PostsController;
 use App\Http\Controllers\Admin\CategoriesController;
 #DM
