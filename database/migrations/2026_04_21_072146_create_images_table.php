@@ -9,16 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('posts', function (Blueprint $table) {
+        Schema::create('images', function (Blueprint $table) {
             $table->id();
-            $table->text('description');
-            $table->longText('image')->nullable();
-            $table->unsignedBigInteger('user_id');
+            $table->foreignId('post_id')->constrained()->onDelete('cascade'); // どの投稿の画像か
+            $table->string('image_path'); // 画像のファイル名（パス）
             $table->timestamps();
-
-            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
@@ -27,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists('images');
     }
 };
