@@ -1,3 +1,6 @@
+{{-- 写真投稿画面 --}}
+{{-- fileのとこ編集 --}}
+
 @extends('layouts.app')
 
 @section('title', 'Create Post')
@@ -33,16 +36,31 @@
         @enderror
 
         <div class="mb-4">
-            <label for="image" class="form-label fw-bold">Image</label>
-            <input type="file" name="image" id="image" class="form-control" aria-describedby="image-info">
-            <div id="image-info" class="form-text">
-                The acceptable formats are jpeg,jpg,png, and gif only. <br>
-                Max file size is 1048kb.
+            <label class="form-label fw-bold">Images (Up to 3)</label>
+
+            <div class="mb-2">
+                <span class="text-muted small">Image 1</span>
+                <input type="file" name="image[]" class="form-control">
             </div>
-            {{-- Error --}}
-            @error('image')
-                <div class="text-danger small">{{ $message }}</div>
-            @enderror
+
+            <div class="mb-2">
+                <span class="text-muted small">Image 2</span>
+                <input type="file" name="image[]" class="form-control">
+            </div>
+
+            <div class="mb-2">
+                <span class="text-muted small">Image 3</span>
+                <input type="file" name="image[]" class="form-control">
+            </div>
+
+            <div class="form-text">
+                Max file size per image: 1048kb.
+            </div>
+        </div>
+        {{-- 配列のエラーを表示するために変更 --}}
+        @error('image.*')
+            <div class="text-danger small">{{ $message }}</div>
+        @enderror
         </div>
 
         <button type="submit" class="btn btn-primary px-5">Post</button>
