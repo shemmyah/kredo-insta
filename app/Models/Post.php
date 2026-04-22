@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\Image;
 
 class Post extends Model
 {
+    use SoftDeletes;
     #To get the owner of the post
     public function user()
     {
