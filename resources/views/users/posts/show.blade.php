@@ -1,4 +1,5 @@
 {{-- 複数postの画面 --}}
+{{-- 複数postの画面 --}}
 @extends('layouts.app')
 
 @section('title', 'Show Post')
@@ -188,6 +189,7 @@
                                                 &middot;
                                                 <button type="submit"
                                                     class="border-0 bg-transparent text-danger p-0 xsmall">Delete</button>
+
                                             </form>
 
                                             <div class="modal fade" id="edit-comment-show-{{ $comment->id }}"
@@ -200,7 +202,6 @@
                                                             @method('PATCH')
 
                                                             <div class="modal-header border-0">
-
                                                                 <h5 class="modal-title h6 fw-bold">Edit Comment</h5>
                                                                 <button type="button" class="btn-close shadow-none"
                                                                     data-bs-dismiss="modal" aria-label="Close"></button>

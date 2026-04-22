@@ -2,6 +2,7 @@
     {{-- Show all comments here --}}
     @if ($post->comments->isNotEmpty())
         <hr>
+        <hr>
         <ul class="list-group">
             @foreach ($post->comments->take(3) as $comment)
                 <li class="list-group-item border-0 p-0 mb-2">
@@ -25,7 +26,7 @@
                             Edit
                         </button>
 
-                        <form action="{{ route('comment.destroy', $comment->id) }}" method="post" class="d-inline">
+                        <form action="{{ route('comment.destroy', $comment->id) }}" method="post">
                             @csrf
                             @method('DELETE')
                             &middot;
