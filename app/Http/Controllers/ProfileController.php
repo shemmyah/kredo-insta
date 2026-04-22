@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\ChatRoom;
 
 class ProfileController extends Controller
 {
@@ -16,7 +17,30 @@ class ProfileController extends Controller
 
     public function show($id) {
         $user = $this->user->findOrFail($id);
-        return view('users.profile.show')->with('user', $user);
+
+        // Initializing the unread count
+        $unread_count = 0;
+
+        // Check unread messages
+        if(Auth::id() !== $user->id) {
+            // Find the chat room between Auth user and the profile user
+            $chat_room = ChatRoom::where(function($query) use ($id) {
+                $query->where('user_one_id', Auth::id())->where('user_two_id', $id);
+            })->orWhere(function($query) use ($id) {
+                $query->where('user_one_id', $id)->where('user_two_id', Auth::id());
+            })->first();
+
+            if($chat_room) {
+                // Count unread messages
+                $unread_count = $chat_room->messages
+                    ->where('is_read', false)
+                    ->where('sender_id', $id)
+                    ->count();
+            }
+        }
+        return view('users.profile.show')
+            ->with('unread_count', $unread_count)
+            ->with('user', $user);
     }
 
     public function edit() {
