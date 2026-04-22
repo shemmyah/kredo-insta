@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -12,13 +13,16 @@
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
+        integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
+
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
@@ -26,7 +30,9 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <h1 class="h5 mb-0">{{ config('app.name') }}</h1>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
@@ -38,7 +44,8 @@
                             {{-- search bar is not avilable in admin pages --}}
                             <ul class="navbar-nav ms-auto">
                                 <form action="{{ route('search') }}" style="width: 300px">
-                                    <input type="search" name="search" class="form-control form-control-sm" placeholder="Search...">
+                                    <input type="search" name="search" class="form-control form-control-sm"
+                                        placeholder="Search...">
                                 </form>
                             </ul>
                         @endif
@@ -77,7 +84,8 @@
                             <li class="nav-item dropdown">
                                 <button id="account-dropdown" class="btn shadow-none nav-link" data-bs-toggle="dropdown">
                                     @if (Auth::user()->avatar)
-                                        <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}" class="rounded-circle avatar-sm">
+                                        <img src="{{ Auth::user()->avatar }}" alt="{{ Auth::user()->name }}"
+                                            class="rounded-circle avatar-sm">
                                     @else
                                         <i class="fa-solid fa-circle-user text-dark icon-sm"></i>
                                     @endif
@@ -86,13 +94,13 @@
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="account-dropdown">
                                     {{-- [SOON] Admin Controls --}}
                                     {{-- @can('admin') --}}
-                                    @if(Gate::allows('admin'))
+                                    @if (Gate::allows('admin'))
                                         <a href="{{ route('admin.users') }}" class="dropdown-item">
                                             <i class="fa-solid fa-user-gear"></i> Admin
                                         </a>
-                                        
+
                                         <hr class="dropdown-divider">
-                                    {{-- @endcan --}}
+                                        {{-- @endcan --}}
                                     @endif
 
                                     {{-- Profile --}}
@@ -101,7 +109,7 @@
                                     </a>
 
                                     <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
+                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         <i class="fa-solid fa-right-from-bracket"></i> {{ __('Logout') }}
                                     </a>
@@ -125,13 +133,16 @@
                         {{-- request()->is() - checks if the current URL matches a pattern --}}
                         <div class="col-3">
                             <div class="list-group">
-                                <a href="{{ route('admin.users') }}" class="list-group-item {{ request()->is('admin/users') ? 'active' : '' }}">
-                                    <i class="fas fa-users"></i> Users
+                                <a href="{{ route('admin.users') }}"
+                                    class="list-group-item {{ request()->is('admin/users') ? 'active' : '' }}">
+                                    <i class="fa-solid fa-users"></i> Users
                                 </a>
-                                <a href="#" class="list-group-item">
+                                <a href="{{ route('admin.posts') }}"
+                                    class="list-group-item {{ request()->is('admin/posts') ? 'active' : '' }}">
                                     <i class="fa-solid fa-newspaper"></i> Posts
                                 </a>
-                                <a href="#" class="list-group-item">
+                                <a href="{{ route('admin.categories') }}"
+                                    class="list-group-item {{ request()->is('admin/categories') ? 'active' : '' }}"">
                                     <i class="fa-solid fa-tags"></i> Categories
                                 </a>
                             </div>
@@ -146,4 +157,5 @@
         </main>
     </div>
 </body>
+
 </html>
