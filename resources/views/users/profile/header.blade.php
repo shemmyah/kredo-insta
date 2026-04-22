@@ -17,18 +17,33 @@
                     <a href="{{ route('profile.edit') }}" class="btn btn-outline-secondary btn-sm fw-bold">Edit
                         Profile</a>
                 @else
-                    @if ($user->isFollowed())
-                        <form action="{{ route('follow.destroy', $user->id) }}" method="post">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-outline-secondary btn-sm fw-bold">Unfollow</button>
-                        </form>
-                    @else
-                        <form action="{{ route('follow.store', $user->id) }}" method="post">
-                            @csrf
-                            <button type="submit" class="btn btn-primary btn-sm fw-bold">Follow</button>
-                        </form>
-                    @endif
+                    <div class="d-flex align-items-center">
+                        @if ($user->isFollowed())
+                            <form action="{{ route('follow.destroy', $user->id) }}" method="post" class="me-2">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-outline-secondary btn-sm fw-bold">Unfollow</button>
+                            </form>
+                        @else
+                            <form action="{{ route('follow.store', $user->id) }}" method="post" class="me-2">
+                                @csrf
+                                <button type="submit" class="btn btn-primary btn-sm fw-bold">Follow</button>
+                            </form>
+                        @endif
+                        {{-- Message Button --}}
+                        <a href="{{ route('chat', $user->id) }}" class="btn btn-outline-dark btn-sm fw-bold px-3 position-relative">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span class="ms-1 d-none d-md-inline">Message</span>
+
+                            {{-- Show notification dot if there are unread messages --}}
+                            @if(isset($unread_count) && $unread_count > 0)
+                                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-success border border-light rounded-circle">
+                                    <span class="visually-hidden">New alerts</span>
+                                </span>
+                            @endif
+                        </a>
+
+                    </div>
                 @endif
             </div>
         </div>

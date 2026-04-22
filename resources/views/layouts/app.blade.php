@@ -81,6 +81,19 @@
                                 </a>
                             </li>
 
+                            {{-- DM --}}
+                            <li class="nav-item" title="Messages">
+                                <a href="{{ route('chat.index') }}" class="nav-link position-relative">
+                                    <i class="fa-solid fa-paper-plane text-dark icon-sm"></i>
+
+                                    @if(isset($unreadCount) && $unreadCount > 0)
+                                        <span class="position-absolute top-2 start-75 translate-middle p-1 bg-success border border-light rounded-circle">
+                                            <span class="visually-hidden">New alerts</span>
+                                        </span>
+                                    @endif
+                                </a>
+                            </li>
+
                             <li class="nav-item dropdown">
                                 <button id="account-dropdown" class="btn shadow-none nav-link" data-bs-toggle="dropdown">
                                     @if (Auth::user()->avatar)

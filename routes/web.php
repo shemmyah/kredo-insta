@@ -12,6 +12,8 @@ use App\Http\Controllers\FollowController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Admin\PostsController;
 use App\Http\Controllers\Admin\CategoriesController;
+#DM
+use App\Http\Controllers\MessageController;
 
 
 Auth::routes();
@@ -70,4 +72,9 @@ Route::group(['middleware' => 'auth'], function(){
     #FOLLOW
     Route::post('/follow/{user_id}/store', [FollowController::class, 'store'])->name('follow.store');
     Route::delete('/follow/{user_id}/destroy', [FollowController::class, 'destroy'])->name('follow.destroy');
+
+    #DM
+    Route::get('/chat/{user_id}', [MessageController::class, 'chat'])->name('chat');
+    Route::get('/messages', [MessageController::class, 'index'])->name('chat.index');
+    Route::post('/message/{chat_room_id}/store', [MessageController::class, 'store'])->name('message.store');
 });
