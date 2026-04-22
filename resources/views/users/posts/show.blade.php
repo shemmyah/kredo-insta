@@ -15,9 +15,38 @@
         }
     </style>
     <div class="row border shadow">
-        <div class="col p-0 border-end">
-            <img src="{{ $post->image }}" alt="post id {{ $post->id }}" class="w-100">
+        <div class="col p-0 border-end bg-black d-flex align-items-center">
+            {{ dd($post->images->first()) }}
+
+            {{-- ★ここから：画像表示部分のみ書き換え --}}
+            @if ($post->images->isNotEmpty())
+                <div id="carouselExample-{{ $post->id }}" class="carousel slide w-100" data-bs-ride="false">
+                    <div class="carousel-inner">
+                        @foreach ($post->images as $key => $image)
+                            <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                                {{-- 修正後：直接 public/images を見に行くようにする --}}
+                                <img src="{{ asset('storage/images/' . $image->image_path) }}" class="d-block w-100" alt="post image">
+                            </div>
+                        @endforeach
+                    </div>
+                    @if ($post->images->count() > 1)
+                        <button class="carousel-control-prev" type="button"
+                            data-bs-target="#carouselExample-{{ $post->id }}" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button"
+                            data-bs-target="#carouselExample-{{ $post->id }}" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
+                    @endif
+                </div>
+            @else
+                {{-- 従来の1枚表示 --}}
+                <img src="{{ $post->image }}" alt="post id {{ $post->id }}" class="w-100">
+            @endif
+            {{-- ★ここまで --}}
         </div>
+
         <div class="col-4 px-0 bg-white">
             <div class="card border-0">
                 <div class="card-header bg-white py-3">
@@ -52,7 +81,6 @@
                                             <i class="fa-regular fa-trash-can"></i> Delete
                                         </button>
                                     </div>
-                                    {{-- include modal here --}}
                                     @include('users.posts.contents.modals.delete')
                                 </div>
                             @else
@@ -75,7 +103,6 @@
                     </div>
                 </div>
                 <div class="card-body w-100">
-                    {{-- heart button + no.of likes + categories --}}
                     <div class="row align-items-center">
                         <div class="col-auto">
                             @if ($post->isLiked())
@@ -107,20 +134,15 @@
                         </div>
                     </div>
 
-                    {{-- owner + description --}}
                     <a href="{{ route('profile.show', $post->user->id) }}"
                         class="text-decoration-none text-dark fw-bold">{{ $post->user->name }}</a>
                     &nbsp;
                     <p class="d-inline fw-light">{{ $post->description }}</p>
                     <p class="text-uppercase text-muted xsmall">{{ date('M D, Y', strtotime($post->created_at)) }}</p>
 
-                    {{-- include comments here --}}
                     <div class="mt-4">
-
-
                         <form action="{{ route('comment.store', $post->id) }}" method="post">
                             @csrf
-
                             <div class="input-group">
                                 <textarea name="comment_body{{ $post->id }}" cols="30" rows="1" class="form-control form-control-sm"
                                     placeholder="Add a comment">{{ old('comment_body' . $post->id) }}</textarea>
@@ -128,12 +150,11 @@
                                     <i class="fa-regular fa-paper-plane"></i>
                                 </button>
                             </div>
-                            {{-- Error --}}
                             @error('comment_body' . $post->id)
                                 <div class="text-danger small">{{ $message }}</div>
                             @enderror
                         </form>
-                        {{-- Show all comments here --}}
+
                         @if ($post->comments->isNotEmpty())
                             <ul class="list-group mt-2">
                                 @foreach ($post->comments as $comment)
@@ -144,6 +165,7 @@
                                         <p class="d-inline fw-light">{{ $comment->body }}</p>
                                         <span
                                             class="text-uppercase text-muted xsmall">{{ date('M d, Y', strtotime($comment->created_at)) }}</span>
+
 
 
 
@@ -160,12 +182,15 @@
                                             <form action="{{ route('comment.destroy', $comment->id) }}" method="post">
                                                 @csrf
                                                 @method('DELETE')
+
+                                                {{-- @if (Auth::user()->id === $comment->user->id) --}}
+
                                                 &middot;
                                                 <button type="submit"
                                                     class="border-0 bg-transparent text-danger p-0 xsmall">Delete</button>
 
                                             </form>
-                                            
+
                                             <div class="modal fade" id="edit-comment-show-{{ $comment->id }}"
                                                 tabindex="-1" aria-hidden="true">
                                                 <div class="modal-dialog modal-dialog-centered">
