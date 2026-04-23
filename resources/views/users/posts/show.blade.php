@@ -1,5 +1,5 @@
 {{-- 複数postの画面 --}}
-{{-- 複数postの画面 --}}
+
 @extends('layouts.app')
 
 @section('title', 'Show Post')
@@ -17,7 +17,7 @@
     </style>
     <div class="row border shadow">
         <div class="col p-0 border-end bg-black d-flex align-items-center">
-            {{ dd($post->images->first()) }}
+            {{-- {{ dd($post->images->first()) }} --}}
 
             {{-- ★ここから：画像表示部分のみ書き換え --}}
             @if ($post->images->isNotEmpty())
@@ -25,8 +25,8 @@
                     <div class="carousel-inner">
                         @foreach ($post->images as $key => $image)
                             <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
-                                {{-- 修正後：直接 public/images を見に行くようにする --}}
-                                <img src="{{ asset('storage/images/' . $image->image_path) }}" class="d-block w-100" alt="post image">
+                                {{-- storage/images/ファイル名 を参照 --}}
+                                <img src="{{ asset('images/' . $image->image_path) }}" class="d-block w-100" alt="post image">
                             </div>
                         @endforeach
                     </div>
@@ -41,9 +41,9 @@
                         </button>
                     @endif
                 </div>
-            @else
+            {{-- @else --}}
                 {{-- 従来の1枚表示 --}}
-                <img src="{{ $post->image }}" alt="post id {{ $post->id }}" class="w-100">
+                {{-- <img src="{{ $post->image }}" alt="post id {{ $post->id }}" class="w-100"> --}}
             @endif
             {{-- ★ここまで --}}
         </div>
@@ -180,7 +180,8 @@
                                                 data-bs-target="#edit-comment-show-{{ $comment->id }}">Edit</button>
 
                                             {{-- 2. Delete button --}}
-                                            <form action="{{ route('comment.destroy', $comment->id) }}" method="post" class="d-inline">
+                                            <form action="{{ route('comment.destroy', $comment->id) }}" method="post"
+                                                class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
 
