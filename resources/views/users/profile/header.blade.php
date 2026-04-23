@@ -1,8 +1,8 @@
 <div class="row">
-    <div class="col-4">
+    <div class="col-4 mb-5">
         @if ($user->avatar)
             <img src="{{ $user->avatar }}" alt="{{ $user->name }}"
-                class="img-thumbnail rounded-circle d-block mx-auto avatar-lg">
+                class="img-thumbnail rounded-circle d-block mx-auto avatar-lg" style="height: 10rem;">
         @else
             <i class="fa-solid fa-circle-user text-secondary d-block text-center icon-lg"></i>
         @endif
