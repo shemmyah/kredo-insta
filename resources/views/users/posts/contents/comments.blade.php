@@ -2,7 +2,7 @@
     {{-- Show all comments here --}}
     @if ($post->comments->isNotEmpty())
         <hr>
-        <hr>
+
         <ul class="list-group">
             @foreach ($post->comments->take(3) as $comment)
                 <li class="list-group-item border-0 p-0 mb-2">
@@ -14,53 +14,48 @@
                     <span
                         class="text-uppercase text-muted xsmall">{{ date('M d, Y', strtotime($comment->created_at)) }}</span>
 
-
-
                     {{-- if the AUTH user is the OWNER, show delete btn --}}
-                    @if (Auth::user()->id === $comment->user->id)
-                        {{-- **Aimi rewrote** --}}
-                        {{-- 1. Edit button --}}
+                    {{-- 1, Edit button (call the modal) --}}
+                    &middot;
+                    <button type="button" class="border-0 bg-transparent text-primary p-0 xsmall" data-bs-toggle="modal"
+                        data-bs-target="#edit-comment-show-{{ $comment->id }}">Edit</button>
+
+                    {{-- 2. Delete button --}}
+                    <form action="{{ route('comment.destroy', $comment->id) }}" method="post" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+
                         &middot;
-                        <button type="button" class="border-0 bg-transparent text-primary p-0 xsmall"
-                            data-bs-toggle="modal" data-bs-target="#edit-comment-{{ $comment->id }}">
-                            Edit
-                        </button>
+                        <button type="submit" class="border-0 bg-transparent text-danger p-0 xsmall">Delete</button>
+                    </form>
 
-                        <form action="{{ route('comment.destroy', $comment->id) }}" method="post">
-                            @csrf
-                            @method('DELETE')
-                            &middot;
-                            <button type="submit"
-                                class="border-0 bg-transparent text-danger p-0 xsmall">Delete</button>
-                        </form>
+                    {{-- 2. Modal for editing comment --}}
+                    <div class="modal fade" id="edit-comment-{{ $comment->id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <form action="{{ route('comment.update', $comment->id) }}" method="post">
+                                    @csrf
+                                    @method('PATCH')
 
-                        {{-- 2. Modal for editing comment --}}
-                        <div class="modal fade" id="edit-comment-{{ $comment->id }}" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content">
-                                    <form action="{{ route('comment.update', $comment->id) }}" method="post">
-                                        @csrf
-                                        @method('PATCH')
+                                    <div class="modal-header border-0">
+                                        <h5 class="modal-title fw-bold">Edit Comment</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                    </div>
 
-                                        <div class="modal-header border-0">
-                                            <h5 class="modal-title fw-bold">Edit Comment</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
+                                    <div class="modal-body">
+                                        <textarea name="comment_body" rows="3" class="form-control" required>{{ $comment->body }}</textarea>
+                                    </div>
 
-                                        <div class="modal-body">
-                                            <textarea name="comment_body" rows="3" class="form-control" required>{{ $comment->body }}</textarea>
-                                        </div>
-
-                                        <div class="modal-footer border-0">
-                                            <button type="button" class="btn btn-outline-secondary btn-sm"
-                                                data-bs-dismiss="modal">Cancel</button>
-                                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
-                                        </div>
-                                    </form>
-                                </div>
+                                    <div class="modal-footer border-0">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm"
+                                            data-bs-dismiss="modal">Cancel</button>
+                                        <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                    @endif
+                    </div>
                 </li>
             @endforeach
 

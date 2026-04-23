@@ -40,7 +40,6 @@
         <div class="mb-4">
             <label class="form-label fw-bold">Images (Up to 3)</label>
 
-            {{-- 1. 現在の画像プレビュー（正方形に統一） --}}
             {{-- 1. 現在の画像プレビュー（比率維持しつつコンパクトに） --}}
             @if ($post->images->isNotEmpty())
                 <div class="row mb-3 justify-content-center"> {{-- 中央寄せ --}}
