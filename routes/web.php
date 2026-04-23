@@ -65,6 +65,9 @@ Route::group(['middleware' => 'auth'], function(){
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
+    Route::get('/profile/{user_id}/following', [ProfileController::class, 'following'])->name('profile.following');
+    Route::get('/profile/{user_id}/followers', [ProfileController::class, 'followers'])->name('profile.followers');
+
     #LIKE
     Route::post('/like/{post_id}/store', [LikeController::class, 'store'])->name('like.store');
     Route::delete('/like/{post_id}/destroy', [LikeController::class, 'destroy'])->name('like.destroy');
