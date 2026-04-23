@@ -86,52 +86,49 @@ class PostController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        # 1. バリデーション
-        $request->validate([
-            'category'    => 'required|array|between:1,3',
-            'description' => 'required|min:1|max:1000',
-            'image.*'     => 'nullable|mimes:jpeg,jpg,png,gif|max:1048' // 複数画像に対応
-        ]);
+{
+    # 1. バリデーション
+    $request->validate([
+        'category'    => 'required|array|between:1,3',
+        'description' => 'required|min:1|max:1000',
+        'image.*'     => 'nullable|mimes:jpeg,jpg,png,gif|max:1048'
+    ]);
 
-        # 2. 投稿本体（Descriptionなど）の更新
-        $post = $this->post->findOrFail($id);
-        $post->description = $request->description;
-        $post->save();
+    # 2. 投稿本体の更新
+    $post = $this->post->findOrFail($id);
+    $post->description = $request->description;
+    $post->save();
 
-        # 3. 画像の更新処理（ここが「3」の内容です）
-        // もし新しい画像が一つでも選択されていたら
-        if ($request->hasFile('image')) {
+    # 3. カテゴリーの更新（リレーションの更新も必要であればここに追加してください）
+    $post->categoryPost()->delete();
+    foreach ($request->category as $category_id) {
+        $post->categoryPost()->create(['category_id' => $category_id]);
+    }
 
-            // ① 古い画像のレコードを images テーブルから削除
-            // (注意：サーバー内のファイルを消す処理は一旦省いて、DBの入れ替えを優先します)
-            $post->images()->delete();
+    # 4. 画像の更新処理
+    if ($request->hasFile('image')) {
+        // ① 古い画像のレコードを images テーブルから削除
+        $post->images()->delete();
 
-            // ② 新しい画像を1枚ずつ保存する（storeと同じループ処理）
-            foreach ($request->file('image') as $file) {
-                if ($file) {
-                    $image_name = time() . '_' . $file->getClientOriginalName();
-                    $file->storeAs('public/images/', $image_name);
+        // ② 新しい画像を1枚ずつ「直接 public/images」に保存
+        foreach ($request->file('image') as $file) {
+            if ($file) {
+                // ファイル名を生成（storeと同じ形式）
+                $image_name = time() . '_' . $file->getClientOriginalName();
 
-                    // imagesテーブルに保存
-                    $post->images()->create([
-                        'image_path' => $image_name
-                    ]);
-                }
+                // storageではなく、直接 public/images フォルダに移動
+                $file->move(public_path('images'), $image_name);
+
+                // imagesテーブルに保存
+                $post->images()->create([
+                    'image_path' => $image_name
+                ]);
             }
         }
-
-        # 4. カテゴリの更新（既存の処理）
-        $post->categoryPost()->delete();
-        $category_post = []; // 初期化
-        foreach ($request->category as $category_id) {
-            $category_post[] = ['category_id' => $category_id];
-        }
-        $post->categoryPost()->createMany($category_post);
-
-        # 5. 詳細画面へリダイレクト
-        return redirect()->route('post.show', $id);
     }
+
+    return redirect()->route('post.show', $id);
+}
 
     public function destroy($id)
     {
