@@ -13,11 +13,13 @@ class PostController extends Controller
 {
     private $post;
     private $category;
+    private $image;
 
-    public function __construct(Post $post, Category $category)
+    public function __construct(Post $post, Category $category, Image $image)
     {
         $this->post = $post;
         $this->category = $category;
+        $this->image = $image;
     }
 
     public function create()
@@ -28,37 +30,29 @@ class PostController extends Controller
 
     public function store(Request $request)
     {
-        // 1. バリデーション（nullableにして、空欄を許容する）
-        $request->validate([
-            'category'    => 'required|array|max:3',
-            'description' => 'required|max:1000',
-            'image.*'     => 'nullable|mimes:jpeg,jpg,png,gif|max:1048',
-        ]);
+        // 1. 投稿本体の保存
+        $post = new Post;
+        $post->user_id = Auth::user()->id;
+        $post->description = $request->description;
+        $post->save();
 
-        // 2. Post本体の保存
-        $this->post->user_id = auth()->id();
-        $this->post->description = $request->description;
-        $this->post->save();
-
-        // 3. カテゴリ保存（既存の処理）
-        // ...
-
-        // 4. 画像の保存（空欄を飛ばして保存）
         if ($request->hasFile('image')) {
-            // array_filterで、中身が空の入力欄を除外します
+            
             foreach ($request->file('image') as $file) {
-                if ($file) { // ファイルが存在する場合のみ処理
+                if ($file) {
                     $image_name = time() . '_' . $file->getClientOriginalName();
-                    $file->storeAs('public/images/', $image_name);
 
-                    $this->post->images()->create([
+                    // storage ではなく、直接 public/images フォルダに保存する
+                    $file->move(public_path('images'), $image_name);
+
+                    $this->image->create([
+                        'post_id'    => $post->id,
                         'image_path' => $image_name
                     ]);
                 }
             }
         }
-
-        return redirect()->route('index');
+        return redirect()->route('post.show', $post->id);
     }
 
     public function show($id)

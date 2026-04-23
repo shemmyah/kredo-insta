@@ -1,7 +1,32 @@
 {{-- clickable image --}}
 <div class="container p-0">
     <a href="{{ route('post.show', $post->id) }}">
-        <img src="{{ $post->image }}" alt="post id {{ $post->id }}" class="w-100">
+        {{-- もし画像（images）が空っぽでなければ表示する --}}
+         @if ($post->images->isNotEmpty())
+                <div id="carouselExample-{{ $post->id }}" class="carousel slide w-100" data-bs-ride="false">
+                    <div class="carousel-inner">
+                        @foreach ($post->images as $key => $image)
+                            <div class="carousel-item {{ $key == 0 ? 'active' : '' }}">
+                                {{-- storage/images/ファイル名 を参照 --}}
+                                <img src="{{ asset('images/' . $image->image_path) }}" class="d-block w-100" alt="post image">
+                            </div>
+                        @endforeach
+                    </div>
+                    @if ($post->images->count() > 1)
+                        <button class="carousel-control-prev" type="button"
+                            data-bs-target="#carouselExample-{{ $post->id }}" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button"
+                            data-bs-target="#carouselExample-{{ $post->id }}" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
+                    @endif
+                </div>
+            {{-- @else --}}
+                {{-- 従来の1枚表示 --}}
+                {{-- <img src="{{ $post->image }}" alt="post id {{ $post->id }}" class="w-100"> --}}
+            @endif
     </a>
 </div>
 <div class="card-body">
