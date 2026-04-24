@@ -65,6 +65,11 @@
                     <strong>{{ $user->following->count() }}</strong> following
                 </a>
             </div>
+            <div class="col-auto">
+                <a href="{{ route('profile.likes', $user->id) }}" class="text-decoration-none text-dark">
+                    <strong>{{ $user->likedPosts->count() }}</strong> likes
+                </a>
+            </div>
         </div>
         <p class="fw-bold">{{ $user->introduction }}</p>
     </div>
