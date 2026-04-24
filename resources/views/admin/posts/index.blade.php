@@ -21,7 +21,18 @@
                     <td class="text-end">{{ $post->id }}</td>
                     <td>
                         <a href="{{ route('post.show', $post->id) }}">
-                            <img src="{{ $post->image }}" alt="post id {{ $post->id }}" class="d-block mx-auto image-lg">
+                            @if ($post->images->isNotEmpty())
+                                {{-- 画像がある場合：最初の1枚を表示 --}}
+                                <img src="{{ asset('images/' . $post->images->first()->image_path) }}"
+                                    alt="post id {{ $post->id }}" class="d-block mx-auto image-lg"
+                                    style="width: 100px; height: 60px; object-fit: cover;">
+                            @else
+                                {{-- 画像がない場合：代わりにアイコンやテキストを表示 --}}
+                                <div class="text-center">
+                                    <i class="fa-solid fa-image text-secondary fa-3x"></i>
+                                    <p class="small text-muted">No Image</p>
+                                </div>
+                            @endif
                         </a>
                     </td>
                     <td>
