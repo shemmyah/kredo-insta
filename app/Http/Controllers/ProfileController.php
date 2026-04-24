@@ -71,6 +71,16 @@ class ProfileController extends Controller
         return redirect()->route('profile.show', Auth::user()->id);
     }
 
+    public function likes($id) {
+        $user = $this->user->findOrFail($id);
+
+        $liked_posts = $user->likedPosts()->with('images')->get();
+
+        return view('users.profile.likes')
+                ->with('user', $user)
+                ->with('liked_posts', $liked_posts);
+    }
+
     public function followers($id) {
         $user = $this->user->findOrFail($id);
 
